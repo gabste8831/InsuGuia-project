@@ -1,48 +1,254 @@
 import 'package:flutter/material.dart';
+import 'package:insuguia_mobile/providers/patient_provider.dart';
 import 'package:insuguia_mobile/views/patient_form_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:insuguia_mobile/views/patient_details_screen.dart';
+// ignore: unused_import
+import 'package:insuguia_mobile/models/patient.model.dart';
 
-class PatientListScreen extends StatelessWidget {
+class PatientListScreen extends StatefulWidget {
   const PatientListScreen({super.key});
+
+  @override
+  State<PatientListScreen> createState() => _PatientListScreenState();
+}
+
+class _PatientListScreenState extends State<PatientListScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // barra no topo
       appBar: AppBar(
         title: const Text('InsuGuia Mobile'),
-        backgroundColor: Colors.blue[800],
+        elevation: 0,
       ),
+      body: Column(
+        children: [
+          // --- ÁREA DE BUSCA ---
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor, // Fundo contínuo da AppBar
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
+            ),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() {
+                  _searchText = value.toLowerCase();
+                });
+              },
+              style: const TextStyle(color: Colors.black87),
+              decoration: InputDecoration(
+                hintText: 'Buscar nome, médico, leito...',
+                hintStyle: TextStyle(color: Colors.grey.shade600),
+                prefixIcon:
+                    Icon(Icons.search, color: Theme.of(context).primaryColor),
+                suffixIcon: _searchText.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear, color: Colors.grey),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() {
+                            _searchText = '';
+                          });
+                        },
+                      )
+                    : null,
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+              ),
+            ),
+          ),
 
-      // corpo da tela
-      body: ListView(
-        padding: const EdgeInsets.all(8.0),
-        children: const [
-          // widget pronto para itens de lista.
-          // dados de exemplo por enquanto, antes de vinculo ao banco
-          ListTile(
-            leading: Icon(Icons.person_outline),
-            title: Text('João da Silva'),
-            subtitle: Text('Leito 201, Enfermaria A'),
-            trailing: Icon(Icons.chevron_right),
-          ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.person_outline),
-            title: Text('Maria Oliveira'),
-            subtitle: Text('Leito 305, Bloco Cirúrgico'),
-            trailing: Icon(Icons.chevron_right),
-          ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.person_outline),
-            title: Text('Pedro Martins'),
-            subtitle: Text('Leito 112, Cardiologia'),
-            trailing: Icon(Icons.chevron_right),
+          // --- LISTA DE PACIENTES ---
+          Expanded(
+            child: Consumer<PatientProvider>(
+              builder: (context, provider, child) {
+                // 1. Carregando
+                if (provider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                // 2. Lógica de Filtragem
+                final allPatients = provider.patients;
+                final filteredPatients = allPatients.where((patient) {
+                  final term = _searchText;
+                  // Busca em múltiplos campos para facilitar
+                  return patient.name.toLowerCase().contains(term) ||
+                      patient.location.toLowerCase().contains(term) ||
+                      patient.doctorName.toLowerCase().contains(term) ||
+                      patient.nurseName.toLowerCase().contains(term);
+                }).toList();
+
+                // 3. Lista Vazia (Mensagens Personalizadas)
+                if (filteredPatients.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            _searchText.isEmpty
+                                ? Icons.person_add_alt_1
+                                : Icons.search_off,
+                            size: 64,
+                            color: Colors.grey[300],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            _searchText.isEmpty
+                                ? 'Nenhum paciente cadastrado ainda.\nToque no botão + para iniciar.'
+                                // CORREÇÃO AQUI: Usamos chaves {} para pegar o texto corretamente
+                                : 'Não encontramos resultados para\n"${_searchController.text}".\n\nTente buscar por nome, médico ou leito.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                // 4. Exibição da Lista (Cards)
+                return ListView.builder(
+                  padding: const EdgeInsets.all(12.0),
+                  itemCount: filteredPatients.length,
+                  itemBuilder: (ctx, index) {
+                    final patient = filteredPatients[index];
+
+                    return Card(
+                      elevation: 2,
+                      margin: const EdgeInsets.symmetric(vertical: 6.0),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PatientDetailsScreen(patient: patient),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              // Avatar com Inicial
+                              CircleAvatar(
+                                radius: 24,
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .secondary
+                                    .withOpacity(0.2),
+                                child: Text(
+                                  patient.name.isNotEmpty
+                                      ? patient.name[0].toUpperCase()
+                                      : 'P',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+
+                              // Informações Principais
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      patient.name,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+
+                                    // Leito
+                                    Row(
+                                      children: [
+                                        Icon(Icons.bed,
+                                            size: 14, color: Colors.grey[600]),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          patient.location,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey[800],
+                                              fontSize: 13),
+                                        ),
+                                      ],
+                                    ),
+
+                                    const SizedBox(height: 6),
+
+                                    // Responsável Técnico
+                                    Row(
+                                      children: [
+                                        Icon(Icons.medical_services,
+                                            size: 12,
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                        const SizedBox(width: 4),
+                                        Expanded(
+                                          child: Text(
+                                            'Dr(a). ${patient.doctorName}',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey[600]),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              const Icon(Icons.chevron_right,
+                                  color: Colors.grey),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
 
-      // botão flutuante no canto inferior direito
+      // Botão Flutuante (Adicionar)
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
