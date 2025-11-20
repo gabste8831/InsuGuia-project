@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-
-// --- IMPORTAÇÕES OBRIGATÓRIAS ---
-// O VS Code precisa destas linhas para achar os outros arquivos.
-// Se elas ficarem vermelhas, significa que seus arquivos estão em pastas diferentes.
 import '../models/patient.model.dart';
 import '../models/note.model.dart';
 import '../models/glycemia.model.dart';
 import '../services/database_service.dart';
-// --------------------------------
 
 class PatientProvider with ChangeNotifier {
   final DatabaseService _databaseService = DatabaseService();
@@ -27,7 +22,7 @@ class PatientProvider with ChangeNotifier {
     loadPatients();
   }
 
-  // --- FUNÇÕES DE PACIENTES ---
+  // FUNÇÕES DE PACIENTES
 
   Future<void> loadPatients() async {
     _setLoading(true);
@@ -61,7 +56,7 @@ class PatientProvider with ChangeNotifier {
     }
   }
 
-  // --- FUNÇÕES DE NOTAS (EVOLUÇÃO) ---
+  // FUNÇÕES DE NOTAS (EVOLUÇÃO)
 
   Future<void> loadNotes(int patientId) async {
     try {
@@ -92,7 +87,7 @@ class PatientProvider with ChangeNotifier {
     }
   }
 
-  // --- FUNÇÕES DE GLICEMIA ---
+  // FUNÇÕES DE GLICEMIA
 
   Future<void> loadGlycemias(int patientId) async {
     try {
@@ -115,7 +110,7 @@ class PatientProvider with ChangeNotifier {
     }
   }
 
-  // --- HELPER DE CARREGAMENTO ---
+  // HELPER DE CARREGAMENTO
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();

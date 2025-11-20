@@ -10,8 +10,6 @@ class Patient {
   final String? doctorNotes;
   final String doctorName;
   final String nurseName;
-
-  // --- NOVOS CAMPOS V8 ---
   final bool isCorticoid;
   final int syringeScale;
 
@@ -36,29 +34,28 @@ class Patient {
     return weight / (heightInMeters * heightInMeters);
   }
 
-  // Lógica de Cálculo de Dose Segura
+  // lógica de cálculo dose segura
   double get calculationFactor {
-    // 1. Se usa corticoide (Resistência), ignora redução de segurança.
+    // se usa corticoide, ignora redução de segurança.
     if (isCorticoid) {
       return 0.5;
     }
-    // 2. Se tem problema renal ou é idoso, reduz dose.
+    // se tem problema renal ou é idoso, reduz a dose.
     if (creatinine > 1.3 || age > 70) {
       return 0.3;
     }
-    // 3. Padrão
+    // padrão
     return 0.5;
   }
 
   double get _totalDailyDose => weight * calculationFactor;
 
-  // Lógica de Arredondamento para Seringa
+  // lógica dose da seringa
   int _roundToSyringeScale(double value) {
     if (syringeScale == 2) {
-      // Arredonda para o número PAR mais próximo
+      // arredonda para o número PAR mais próximo
       return (value / 2).round() * 2;
     }
-    // Arredonda normal
     return value.round();
   }
 
@@ -72,7 +69,7 @@ class Patient {
     return _roundToSyringeScale(rawDose);
   }
 
-  // Converte para salvar no Banco
+  // Converte para salvar no DB
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -91,7 +88,7 @@ class Patient {
     };
   }
 
-  // Converte do Banco para o App
+  // Converte do banco para o app
   factory Patient.fromMap(Map<String, dynamic> map) {
     return Patient(
       id: map['id'],
@@ -110,7 +107,7 @@ class Patient {
     );
   }
 
-  // Cria uma cópia (útil para editar apenas um campo)
+  // cria uma cópia (útil para editar apenas um campo)
   Patient copyWith({String? doctorNotes}) {
     return Patient(
       id: id,

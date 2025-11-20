@@ -45,7 +45,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
     super.dispose();
   }
 
-  // --- AÇÕES ---
+  // AÇÕES
 
   void _saveDoctorNotes() {
     final updatedPatient =
@@ -97,7 +97,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
     }
   }
 
-  // --- NAVEGAÇÃO ---
+  // NAVEGAÇÃO
 
   void _editPatient() async {
     await Navigator.push(
@@ -202,7 +202,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
     );
   }
 
-  // --- ABA 1: PRESCRIÇÃO (ATUALIZADA) ---
+  // ABA 1: PRESCRIÇÃO
 
   Widget _buildPrescriptionTab(BuildContext context, String bmi) {
     final bool isReducedDose = !_displayPatient.isCorticoid &&
@@ -215,42 +215,42 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // --- CARD DE IDENTIFICAÇÃO E DADOS (ATUALIZADO) ---
+          // CARD DE IDENTIFICAÇÃO E DADOS
           _buildInfoCard(
             context: context,
             title: 'Identificação e Dados Clínicos',
-            icon: Icons.person, // Mudei o ícone para Pessoa
+            icon: Icons.person,
             children: [
-              // Parte 1: Dados Pessoais
+              // Dados Pessoais
               _buildDetailItem('Nome Completo', _displayPatient.name),
               _buildDetailItem('Idade / Sexo',
                   '${_displayPatient.age} anos / ${_displayPatient.sex}'),
 
-              const Divider(), // Divisor
+              const Divider(),
 
-              // Parte 2: Antropometria e Rim
+              // Antropometria
               _buildDetailItem('Peso / Altura',
                   '${_displayPatient.weight} kg / ${_displayPatient.height} cm'),
               _buildDetailItem('IMC', '$bmi kg/m²'),
               _buildDetailItem(
                   'Creatinina', '${_displayPatient.creatinine} mg/dL'),
 
-              // Parte 3: Fatores de Risco e Equipamento
+              // fatores de risco
               _buildDetailItem('Uso de Corticoide?',
                   isResistant ? 'SIM (Resistência)' : 'Não'),
               _buildDetailItem(
                   'Seringa/Escala', isEvenRounding ? '2 em 2 UI' : '1 em 1 UI'),
 
-              const Divider(), // Divisor
+              const Divider(),
 
-              // Parte 4: Equipe
+              // equipe responsável
               _buildDetailItem('Médico(a) Resp.', _displayPatient.doctorName),
               _buildDetailItem('Enfermeiro(a)', _displayPatient.nurseName),
             ],
           ),
           const SizedBox(height: 16),
 
-          // --- PROTOCOLO ---
+          // PROTOCOLO OFC
           _buildInfoCard(
             context: context,
             title: 'Protocolo de Insulina',
@@ -353,7 +353,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
     );
   }
 
-  // --- SEÇÃO DE EVOLUÇÃO ---
+  //SEÇÃO DE EVOLUÇÃO
 
   Widget _buildNotesSection(BuildContext context) {
     return Column(
@@ -485,7 +485,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
     );
   }
 
-  // --- ABA 2: MONITORAMENTO ---
+  // ABA 2: MONITORAMENTO
 
   Widget _buildMonitoringTab(BuildContext context) {
     return Column(
@@ -577,7 +577,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
     );
   }
 
-  // --- ALTA E HELPERS ---
+  // ALTA E HELPERS
 
   String _generateDischargeText() {
     final date = DateFormat('dd/MM/yyyy').format(DateTime.now());

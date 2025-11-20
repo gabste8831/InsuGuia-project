@@ -2,7 +2,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'dart:io';
-// Importe seus modelos
 import '../models/patient.model.dart';
 import '../models/note.model.dart';
 import '../models/glycemia.model.dart';
@@ -22,7 +21,6 @@ class DatabaseService {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    // NOME DO BANCO V8 (Garante recriação)
     String path = join(documentsDirectory.path, 'insuguia_FINAL_v8.db');
 
     return await openDatabase(
@@ -33,7 +31,7 @@ class DatabaseService {
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    // Tabela Pacientes (Atualizada)
+    // tabela pacientes
     await db.execute('''
       CREATE TABLE patients(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,7 +50,7 @@ class DatabaseService {
       )
     ''');
 
-    // Tabela Notas
+    // tabela notas
     await db.execute('''
       CREATE TABLE notes(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,7 +63,7 @@ class DatabaseService {
       )
     ''');
 
-    // Tabela Glicemias
+    // tabela clicemias
     await db.execute('''
       CREATE TABLE glycemias(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,7 +75,7 @@ class DatabaseService {
     ''');
   }
 
-  // CRUD Paciente
+  // CRUD paciente
   Future<int> insertPatient(Patient patient) async {
     Database db = await database;
     return await db.insert('patients', patient.toMap());
@@ -100,7 +98,7 @@ class DatabaseService {
     await db.delete('patients', where: 'id = ?', whereArgs: [id]);
   }
 
-  // CRUD Notas
+  // CRUD notas
   Future<int> insertNote(Note note) async {
     Database db = await database;
     return await db.insert('notes', note.toMap());
@@ -113,7 +111,7 @@ class DatabaseService {
     return List.generate(maps.length, (i) => Note.fromMap(maps[i]));
   }
 
-  // CRUD Glicemias
+  // CRUD glicemias
   Future<int> insertGlycemia(Glycemia glycemia) async {
     Database db = await database;
     return await db.insert('glycemias', glycemia.toMap());

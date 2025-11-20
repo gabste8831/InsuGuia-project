@@ -3,7 +3,7 @@ class Note {
   final int patientId;
   final String content;
   final DateTime date;
-  // Campos de Auditoria
+  // campos de auditoria
   final String recordedDoctorName;
   final String recordedNurseName;
 
@@ -33,7 +33,7 @@ class Note {
       patientId: map['patientId'],
       content: map['content'],
       date: DateTime.parse(map['date']),
-      // Fallback para evitar erro se o campo vier nulo de um banco antigo
+      // fallback para evitar erro se o campo vier nulo de um banco antigo
       recordedDoctorName: map['recordedDoctorName'] ?? 'Não registrado',
       recordedNurseName: map['recordedNurseName'] ?? 'Não registrado',
     );

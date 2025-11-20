@@ -3,7 +3,6 @@ import 'package:insuguia_mobile/providers/patient_provider.dart';
 import 'package:insuguia_mobile/views/patient_form_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:insuguia_mobile/views/patient_details_screen.dart';
-// ignore: unused_import
 import 'package:insuguia_mobile/models/patient.model.dart';
 
 class PatientListScreen extends StatefulWidget {
@@ -32,11 +31,11 @@ class _PatientListScreenState extends State<PatientListScreen> {
       ),
       body: Column(
         children: [
-          // --- ÁREA DE BUSCA ---
+          // ÁREA DE BUSCA
           Container(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor, // Fundo contínuo da AppBar
+              color: Theme.of(context).primaryColor,
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(24),
                 bottomRight: Radius.circular(24),
@@ -78,27 +77,26 @@ class _PatientListScreenState extends State<PatientListScreen> {
             ),
           ),
 
-          // --- LISTA DE PACIENTES ---
+          // LISTA PACIENTES
           Expanded(
             child: Consumer<PatientProvider>(
               builder: (context, provider, child) {
-                // 1. Carregando
                 if (provider.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                // 2. Lógica de Filtragem
+                // lógica de filtro
                 final allPatients = provider.patients;
                 final filteredPatients = allPatients.where((patient) {
                   final term = _searchText;
-                  // Busca em múltiplos campos para facilitar
+                  // múltilos parâmetros de busca
                   return patient.name.toLowerCase().contains(term) ||
                       patient.location.toLowerCase().contains(term) ||
                       patient.doctorName.toLowerCase().contains(term) ||
                       patient.nurseName.toLowerCase().contains(term);
                 }).toList();
 
-                // 3. Lista Vazia (Mensagens Personalizadas)
+                // Lista Vazia
                 if (filteredPatients.isEmpty) {
                   return Center(
                     child: Padding(
@@ -117,7 +115,6 @@ class _PatientListScreenState extends State<PatientListScreen> {
                           Text(
                             _searchText.isEmpty
                                 ? 'Nenhum paciente cadastrado ainda.\nToque no botão + para iniciar.'
-                                // CORREÇÃO AQUI: Usamos chaves {} para pegar o texto corretamente
                                 : 'Não encontramos resultados para\n"${_searchController.text}".\n\nTente buscar por nome, médico ou leito.',
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -132,7 +129,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
                   );
                 }
 
-                // 4. Exibição da Lista (Cards)
+                // exibição da Lista (cards)
                 return ListView.builder(
                   padding: const EdgeInsets.all(12.0),
                   itemCount: filteredPatients.length,
@@ -178,7 +175,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
                               ),
                               const SizedBox(width: 16),
 
-                              // Informações Principais
+                              // infos principais
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +189,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
                                     ),
                                     const SizedBox(height: 4),
 
-                                    // Leito
+                                    // leito
                                     Row(
                                       children: [
                                         Icon(Icons.bed,
@@ -210,7 +207,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
 
                                     const SizedBox(height: 6),
 
-                                    // Responsável Técnico
+                                    // responsável técnico
                                     Row(
                                       children: [
                                         Icon(Icons.medical_services,
@@ -248,7 +245,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
         ],
       ),
 
-      // Botão Flutuante (Adicionar)
+      // botão flutuante (adicionar)
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
-
 import 'package:insuguia_mobile/providers/patient_provider.dart';
 import 'package:insuguia_mobile/views/patient_list_screen.dart';
 
@@ -28,16 +27,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-
           colorScheme: ColorScheme.fromSeed(
             seedColor: primaryColor,
             brightness: Brightness.light,
             primary: primaryColor,
             secondary: accentColor,
           ),
-
-          // REMOVEMOS O TAB BAR THEME DAQUI PARA PARAR O ERRO
-
           appBarTheme: AppBarTheme(
             backgroundColor: primaryColor,
             foregroundColor: Colors.white,
@@ -49,7 +44,6 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryColor,
@@ -59,7 +53,6 @@ class MyApp extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12)),
             ),
           ),
-
           inputDecorationTheme: InputDecorationTheme(
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -71,7 +64,6 @@ class MyApp extends StatelessWidget {
                 borderSide: BorderSide(color: primaryColor, width: 2)),
             labelStyle: TextStyle(color: Colors.grey[700]),
           ),
-
           cardTheme: CardThemeData(
             elevation: 2,
             color: Colors.white,
