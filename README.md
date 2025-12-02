@@ -45,12 +45,10 @@ O projeto foi desenvolvido com base em uma demanda real apresentada pelo **Dr. I
 
 ## Autores
 
-Projeto desenvolvido pelos acadêmicos do curso de **Sistemas de Informação**:
-
-| [<img src="https://github.com/gabste8831.png" width="75px;"/>](https://github.com/gabste8831) | [<img src="https://github.com/user-attachments/assets/cea3cc49-40b7-403f-aca8-1eaeb7eca2a8" width="75px;"/>](LINK_GITHUB_LUCAS) |
-| :---: | :---: |
-| **Gabriel Steffens** | **Lucas Weigel** |
-| [GitHub](https://github.com/gabste8831) | [GitHub](https://github.com/Lucas1063) |
+| [<img src="https://github.com/gabste8831.png" width="75px;"/>](https://github.com/gabste8831) |
+| :---: | 
+| **Gabriel Steffens** | 
+| [GitHub](https://github.com/gabste8831) | 
 
 ## Como Rodar o Projeto
 
